@@ -3,26 +3,34 @@
 #include <stdlib.h>
 #include <string.h>
 
-void list_print(node *head){
+int list_print(node *head){
+    if(head == NULL) return 1;
+
     int i = 0;
     while(head != NULL){
-        printf("%d elemento duomenys: ", i);
+        printf("%d element data: ", i);
         node_print(head);
 
         i++;
         head = head->next;
     }
     printf("\n");
+
+    return 0;
 }
 
-void node_print(node *el){
-    printf("Vardas - %s, Pavarde - %s, Telefono numeris - %s, El. pastas - %s", el->name, el->surname, el->telnumber, el->email);
+int node_print(node *el){
+    if(el == NULL) return 1;
+
+    printf("Name - %s, Surname - %s, Telephone number - %s, Email address - %s", el->name, el->surname, el->telnumber, el->email);
     printf("\n");
+
+    return 0;
 }
 
 void list_addback(node **head, node *new){
     if(*head == NULL){
-        (*head) = new;
+        *head = new;
         return;
     }
 
@@ -32,15 +40,13 @@ void list_addback(node **head, node *new){
     iter->next = new;
 }
 
-void list_add(node **head, node *new, int k){
-    if(k < 0){
-        printf("Netinkamas elemento numeris");
-        return;
-    }
-    
+int list_add(node **head, node *new, int k){
+    if(k < 0) return 1;
+
     if(k == 0) {
         new->next = *head;
         *head = new;
+        return 0;
     }
 
     node *iter = *head;
@@ -53,21 +59,25 @@ void list_add(node **head, node *new, int k){
     node *temp = iter->next;
     iter->next = new;
     new->next = temp;
+
+    return 0;
 }
 
-void list_delall( node *head){
-     node *temp;
+void list_delall(node **head){
+    node *temp;
 
-    while(head != NULL){
-        temp = head;
-        head = head->next;
+    while(*head != NULL){
+        temp = *head;
+        *head = (*head)->next;
 
         free(temp);
     }
 }
 
- node* list_getid( node *head, int k){
-     node *iter = head;
+node* list_getid(node *head, int k){
+    if(k < 0) return NULL;
+
+    node *iter = head;
     int i = 0;
     
     while(i < k && iter != NULL){
@@ -89,17 +99,15 @@ node* list_getname(node *head, char* name){
     return iter;
 }
 
-void list_delid(node **head, int k){
-    if(k < 0){
-        printf("Netinkamas elemento numeris");
-        return;
-    }
+int list_delid(node **head, int k){
+    if(k < 0) return 1;
+
     if(k == 0){
-        node *temp = *head;
+        node *tmp = *head;
         *head = (*head)->next;
 
-        free(temp);
-        return;
+        if(tmp != NULL) free(tmp);
+        return 0;
     }
     
     node *iter = *head;
@@ -110,8 +118,10 @@ void list_delid(node **head, int k){
         i++;
     }
     
-    node *temp = iter->next;
-    iter->next = temp->next;
+    node *tmp = iter->next;
+    iter->next = tmp->next;
 
-    free(temp);
+    if(tmp != NULL) free(tmp);
+
+    return 0;
 }
